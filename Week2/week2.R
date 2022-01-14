@@ -1,5 +1,11 @@
 library(pacman)
-p_load(haven, SciViews, plm)
+p_load(haven, SciViews, plm, tidyverse)
+
+#### 1 ####
+##### i #####
+##### ii #####
+##### iii #####
+
 
 #### 2 ####
 q2 <- read_dta("Week2/assignment2.dta")
@@ -24,14 +30,33 @@ pooled_ethnic <-
   plm(
     ln(earnings) ~ school + age + I(agesq ^ 2) + ethblack + urban + regne + regnc + regw + regs + I(school *
                                                                                                       ethblack),
-    data = q2, model = "pooling"
+    data = q2, model = "pooling", index = c('id', 'time')
   )
 summary(pooled_ethnic)
 
 ##### iii #####
-rem_ethnic <-
+rem <-
   plm(
-    ln(earnings) ~ school + age + I(agesq ^ 2) + ethblack + urban + regne + regnc + regw + regs + I(school *
-                                                                                                      ethblack),
-    data = q2, model = "random", effect = "time"
+    ln(earnings) ~ school + ethblack + I(school * ethblack),
+    data = q2, model = "random", index = c('id', 'time'), effect = "twoways"
   )
+summary(rem)
+
+
+##### iv #####
+# Only text
+
+##### v #####
+fem <-
+  plm(
+    ln(earnings) ~ school + ethblack + I(school * ethblack),
+    data = q2, model = "within", index = c('id', 'time'), effect = "twoways"
+  )
+summary(fem)
+
+##### vi #####
+phtest(rem, fem)
+
+##### vii #####
+
+##### viii #####
