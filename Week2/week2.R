@@ -37,11 +37,11 @@ summary(pooled_ethnic)
 ##### iii #####
 rem <-
   plm(
-    ln(earnings) ~ school + ethblack + I(school * ethblack),
+    ln(earnings) ~ school + age + I(agesq ^ 2) + ethblack + urban + regne + regnc + regw + regs + I(school *
+                                                                                                      ethblack),
     data = q2, model = "random", index = c('id', 'time'), effect = "twoways"
   )
-summary(rem)
-
+# summary(fixef(rem_ethnic, type = "dmean"))
 
 ##### iv #####
 # Only text
@@ -49,10 +49,12 @@ summary(rem)
 ##### v #####
 fem <-
   plm(
-    ln(earnings) ~ school + ethblack + I(school * ethblack),
+    ln(earnings) ~ school + age + I(agesq ^ 2) + ethblack + urban + regne + regnc + regw + regs + I(school *
+                                                                                                      ethblack),
     data = q2, model = "within", index = c('id', 'time'), effect = "twoways"
   )
-summary(fem)
+
+fem %>% summary
 
 ##### vi #####
 phtest(rem, fem)
