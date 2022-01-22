@@ -1,12 +1,12 @@
 #### Load packages and init ####################################################
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse, vtreat, caret, rpart, ohenery, xtable)
+pacman::p_load(tidyverse, vtreat, caret, rpart, ohenery, stargazer, xtable, rio)
 set.seed(42)
 
 #### Data #################################################################
 ##### Load #####
-q2 <- read_dta("Week3/assignment3.dta")
-q2 <- drop_na(q2) %>% select(-id)
+q2_origin <- import("Week3/assignment3.dta")
+q2 <- drop_na(q2_origin) %>% select(-id)
 
 #### Q2 ####
 ##### 2i #####
@@ -25,14 +25,13 @@ q2 %>% group_by(treatment) %>% summarise_if(is.numeric, mean) %>%
 
 ##### 2ii #####
 lm1 <- lm(correct ~ treatment, data=q2)
-
-summary(lm1) %>% xtable(., type='latex')
-summary(lm1) 
-
-lm1 <- lm(correct ~ ., data=q2)
-
-summary(lm1) %>% xtable(., type='latex')
-summary(lm1) 
-
+#summary(lm1) %>% xtable(., type='latex')
+#summary(lm1) 
+lm2 <- lm(correct ~ ., data=q2)
+#summary(lm1) %>% xtable(., type='latex')
+#summary(lm1) 
+stargazer(lm1,lm2,title = "Model to treatments VS Model includes all variables", 
+          dep.var.labels = "correct",
+          column.labels = c("Model to treatments", "Model includes all variables"))
 
 ##### 2iii #####
