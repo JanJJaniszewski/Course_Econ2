@@ -1,11 +1,11 @@
 #### Load packages and init ####################################################
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse, vtreat, caret, rpart, ohenery, xtable)
+pacman::p_load(tidyverse, vtreat, caret, rpart, ohenery, xtable, haven, pwr)
 set.seed(42)
 
 #### Data #################################################################
 ##### Load #####
-q2 <- read_dta("Week3/assignment3.dta")
+q2 <- read_dta("./Week3/assignment3.dta")
 q2 <- drop_na(q2) %>% select(-id)
 
 #### Q2 ####
@@ -36,3 +36,26 @@ summary(lm1)
 
 
 ##### 2iii #####
+lm_preferred <- glm(correct ~ treatment + gender + treatment*gender, data=q2, family = "binomial")
+summary(lm_preferred)
+
+##### 2iv #####
+# Preferred model is lm_preferred
+
+
+
+##### 2v #####
+n_per_cohort <- NULL # what we want to know
+effect_size <- 2/5
+p_value <- 0.01
+power <- 0.99
+type <- "two.sample"  # default value
+alternative <- "two.sided"# default value
+## given any three you can estimate the fourth
+(estimate <- pwr.t.test(n = n_per_cohort, 
+                        d = effect_size, 
+                        sig.level = p_value,
+                        power = power,
+                        type = type,
+                        alternative = alternative))
+estimate
